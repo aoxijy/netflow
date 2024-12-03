@@ -40,7 +40,7 @@ func main() {
 			defer func() { <-semaphore }() // 释放一个并发槽
 
 			// 静默处理下载任务，不输出日志
-			_ = downloadFile(url, fmt.Sprintf("file_%d", i+1))
+			_ = downloadToDiscard(url)
 		}(i, url)
 	}
 
@@ -75,8 +75,8 @@ func fetchDownloadList(url string) ([]string, error) {
 	return downloadList, nil
 }
 
-// 下载文件
-func downloadFile(url, fileName string) error {
+// 下载文件并直接丢弃内容
+func downloadToDiscard(url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
 		return err // 静默处理错误
@@ -87,15 +87,8 @@ func downloadFile(url, fileName string) error {
 		return fmt.Errorf("下载失败，状态码: %d", resp.StatusCode)
 	}
 
-	// 创建目标文件
-	out, err := os.Create(fileName)
-	if err != nil {
-		return err // 静默处理错误
-	}
-	defer out.Close()
-
-	// 将响应体写入文件
-	_, err = io.Copy(out, resp.Body)
+	// 直接将响应体写入 io.Discard
+	_, err = io.Copy(io.Discard, resp.Body)
 	if err != nil {
 		return err // 静默处理错误
 	}
