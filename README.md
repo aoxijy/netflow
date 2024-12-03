@@ -1,4 +1,4 @@
-# netflowFlasher
-刷下行流量小工具，二进制简单部署，仅消耗流量，不写入硬盘
+# netflow
+Stress test the bandwidth and check the server load,
+Customize various programs and Dockerfiles, aoxijy@gmail.com
 
-> 直接执行二进制文件即可，每个程序消耗3M/s，有需求可多开或修改源码编译
